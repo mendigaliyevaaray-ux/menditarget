@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Обучение таргетингу с Арай — клиенты по всему миру</title>
+<meta name="description" content="Профессия таргетолог с поддержкой до результата. Ученики уже закрывают клиентов из Дубая, Нью-Йорка, Бостона и Парижа — в тенге, долларах и евро.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Lora:ital@1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#130E20;
+    --bg-2:#0E0A1A;
+    --panel:#1B1433;
+    --panel-2:#241A42;
+    --violet:#8B5CF6;
+    --violet-br:#A78BFA;
+    --lav:#C9BBF5;
+    --magenta:#E26EE5;
+    --text:#EDE9F7;
+    --muted:#A096BE;
+    --line:rgba(201,187,245,.14);
+    --line-2:rgba(201,187,245,.22);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;background:var(--bg);color:var(--text);
+    font-family:"Manrope",system-ui,sans-serif;font-size:17px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  h1,h2,h3{font-family:"Unbounded",sans-serif;font-weight:600;line-height:1.08;letter-spacing:-.01em;margin:0;}
+  p{margin:0;} a{color:inherit;} img{max-width:100%;display:block;}
+  .wrap{width:min(1120px,92vw);margin:0 auto;}
+
+  .cta{
+    display:inline-flex;align-items:center;gap:.6em;
+    background:linear-gradient(135deg,#9b6cff 0%,#c850c0 100%);color:#fff;
+    font-family:"Manrope",sans-serif;font-weight:700;font-size:1.02rem;text-decoration:none;
+    padding:1.05em 1.8em;border-radius:100px;border:0;
+    box-shadow:0 16px 38px -12px rgba(155,108,255,.6);
+    transition:transform .2s ease, box-shadow .2s ease, filter .2s ease;cursor:pointer;
+  }
+  .cta:hover{transform:translateY(-2px);box-shadow:0 24px 48px -14px rgba(200,80,192,.7);filter:brightness(1.07);}
+  .cta:focus-visible{outline:3px solid var(--lav);outline-offset:3px;}
+  .cta svg{width:1.25em;height:1.25em;flex:none;}
+
+  .nav{position:sticky;top:0;z-index:50;background:rgba(19,14,32,.78);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:.85rem 0;}
+  .brand{font-family:"Unbounded",sans-serif;font-weight:600;font-size:1.15rem;letter-spacing:.18em;color:var(--text);}
+  .brand small{display:block;font-family:"Manrope";font-weight:500;font-size:.6rem;letter-spacing:.34em;color:var(--lav);margin-top:2px;}
+  .nav .cta{padding:.7em 1.15em;font-size:.9rem;box-shadow:0 8px 20px -10px rgba(155,108,255,.7);}
+
+  .hero{
+    position:relative;
+    background:
+      radial-gradient(40% 34% at 12% 6%, rgba(139,92,246,.34), transparent 70%),
+      radial-gradient(36% 30% at 92% 88%, rgba(226,110,229,.22), transparent 72%),
+      radial-gradient(120% 100% at 80% -10%, #3a2270 0%, #221544 46%, #150E28 100%);
+    padding:4.8rem 0 3.4rem;overflow:hidden;
+  }
+  .hero .wrap{position:relative;z-index:2;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:.55em;font-size:.78rem;font-weight:600;
+    letter-spacing:.06em;text-transform:uppercase;color:var(--lav);
+    border:1px solid var(--line-2);padding:.5em 1em;border-radius:100px;margin-bottom:1.6rem;
+  }
+  .eyebrow b{width:7px;height:7px;border-radius:50%;background:var(--magenta);box-shadow:0 0 10px var(--magenta);}
+  .hero h1{font-size:clamp(2.3rem,6vw,4.3rem);max-width:16ch;}
+  .hero h1 .em{background:linear-gradient(120deg,#c6a4ff,#e98fe5);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .hero-sub{margin-top:1.5rem;max-width:54ch;font-size:1.12rem;color:rgba(237,233,247,.82);}
+  .hero-cta-row{display:flex;flex-wrap:wrap;gap:1rem;align-items:center;margin-top:2.2rem;}
+  .hero-note{font-size:.9rem;color:var(--muted);max-width:24ch;}
+
+  .stamps{margin-top:3rem;display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;}
+  .stamp{font-family:"Manrope";font-weight:600;font-size:.82rem;letter-spacing:.04em;color:var(--lav);
+    border:1.4px solid var(--line-2);border-radius:8px;padding:.42em .8em;transform:rotate(var(--r,0deg));text-transform:uppercase;white-space:nowrap;}
+  .stamp small{color:var(--muted);font-weight:500;letter-spacing:0;text-transform:none;margin-left:.4em;}
+
+  .section{padding:4.4rem 0;}
+  .section-tag{font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--magenta);
+    display:flex;align-items:center;gap:.7em;margin-bottom:1.1rem;}
+  .section-tag:before{content:"";width:28px;height:1.5px;background:var(--magenta);}
+  .section h2{font-size:clamp(1.7rem,3.6vw,2.7rem);max-width:20ch;}
+  .lead{margin-top:1.1rem;max-width:60ch;color:var(--muted);font-size:1.08rem;}
+
+  .trans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;margin-top:2.6rem;}
+  .tcard{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:1.6rem;}
+  .tcard .ic{font-family:"Unbounded";font-size:1.15rem;color:var(--violet-br);font-weight:700;margin-bottom:.7rem;}
+  .tcard h3{font-size:1.12rem;font-family:"Manrope";font-weight:700;letter-spacing:0;margin-bottom:.45rem;}
+  .tcard p{color:var(--muted);font-size:.97rem;}
+
+  .results{background:linear-gradient(180deg,var(--bg-2),#160F2A);}
+  .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:2.6rem 0 2.4rem;}
+  .stat{border:1px solid var(--line);border-radius:16px;padding:1.3rem;background:var(--panel);}
+  .stat b{display:block;font-family:"Unbounded";font-weight:600;font-size:1.7rem;
+    background:linear-gradient(120deg,#c6a4ff,#e98fe5);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .stat span{font-size:.88rem;color:var(--muted);}
+  .proof-grid{columns:3;column-gap:1rem;}
+  .proof-grid figure{margin:0 0 1rem;break-inside:avoid;border-radius:14px;overflow:hidden;border:1px solid var(--line-2);background:#fff;}
+  .proof-grid img{width:100%;}
+
+  .prog-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:2.6rem;align-items:start;}
+  .mod{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:border-color .2s ease, background .2s ease;}
+  .mod[open]{border-color:var(--line-2);background:var(--panel-2);}
+  .mod-head{list-style:none;cursor:pointer;display:flex;gap:1rem;align-items:flex-start;padding:1.3rem 1.4rem;}
+  .mod-head::-webkit-details-marker{display:none;}
+  .mod-head:focus-visible{outline:2px solid var(--violet-br);outline-offset:-2px;border-radius:14px;}
+  .mod .n{font-family:"Unbounded";font-weight:600;font-size:.95rem;color:var(--violet-br);
+    border:1.5px solid var(--violet);border-radius:9px;min-width:2.4em;height:2.4em;display:flex;align-items:center;justify-content:center;flex:none;}
+  .mod-body{flex:1;}
+  .mod-body h3{font-size:1.04rem;font-family:"Manrope";font-weight:700;letter-spacing:0;margin-bottom:.3rem;}
+  .mod-body p{color:var(--muted);font-size:.92rem;}
+  .chev{flex:none;width:1.5em;height:1.5em;color:var(--lav);margin-top:.35em;transition:transform .25s ease;}
+  .mod[open] .chev{transform:rotate(180deg);}
+  .lessons{list-style:none;margin:0;padding:0 1.4rem 1.3rem calc(2.4em + 2.4rem);display:flex;flex-direction:column;gap:.55rem;}
+  .lessons li{position:relative;font-size:.92rem;color:var(--text);padding-left:1.1em;line-height:1.4;}
+  .lessons li:before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--violet);box-shadow:0 0 8px rgba(139,92,246,.7);}
+  .mod.feat{background:linear-gradient(180deg,#33215f,#241A42);border-color:transparent;}
+  .mod.feat[open]{background:linear-gradient(180deg,#3a2670,#281c4a);}
+  .badge{display:inline-block;font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    color:#1c1230;background:linear-gradient(120deg,#c6a4ff,#e98fe5);padding:.18em .6em;border-radius:6px;margin-bottom:.5rem;}
+
+  .format{background:linear-gradient(180deg,#160F2A,var(--bg));}
+  .fmt-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.9rem;margin-top:2.4rem;}
+  .fmt{display:flex;gap:.9rem;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:1.2rem 1.3rem;}
+  .fmt .ck{flex:none;width:1.7em;height:1.7em;border-radius:50%;background:linear-gradient(135deg,#9b6cff,#c850c0);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:.1em;}
+  .fmt p{font-size:.98rem;} .fmt b{font-weight:700;color:var(--text);}
+
+  .quotes{display:grid;grid-template-columns:repeat(2,1fr);gap:1.1rem;margin-top:2.6rem;}
+  .quote{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:1.7rem;}
+  .quote .mark{font-family:"Lora";font-style:italic;font-size:3.2rem;color:var(--violet-br);line-height:.6;height:.4em;display:block;}
+  .quote p{font-family:"Lora";font-style:italic;font-size:1.12rem;line-height:1.55;color:#ddd5f2;margin-top:.4rem;}
+  .quote .who{margin-top:1.1rem;font-family:"Manrope";font-style:normal;font-weight:700;font-size:.9rem;color:var(--muted);}
+
+  .final{background:radial-gradient(50% 60% at 50% 0%, rgba(139,92,246,.3), transparent 70%),linear-gradient(180deg,#241544,#150E28);text-align:center;padding:5rem 0;}
+  .final h2{font-size:clamp(1.9rem,4.6vw,3.2rem);max-width:18ch;margin:0 auto;}
+  .final p{margin:1.3rem auto 2.2rem;max-width:46ch;color:var(--muted);}
+
+  footer{background:var(--bg-2);color:var(--muted);padding:2.2rem 0;font-size:.85rem;border-top:1px solid var(--line);}
+  .foot-inner{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;align-items:center;}
+  footer .brand{color:var(--text);}
+
+  @media(max-width:880px){
+    .trans-grid,.proof-grid{grid-template-columns:1fr;}
+    .proof-grid{columns:2;}
+    .prog-grid,.fmt-grid,.quotes{grid-template-columns:1fr;}
+    .stat-row{grid-template-columns:1fr 1fr;}
+  }
+  @media(max-width:560px){
+    body{font-size:16px;}
+    .section{padding:3.4rem 0;}
+    .hero{padding:3.4rem 0 2.6rem;}
+    .proof-grid{columns:1;}
+    .lessons{padding-left:1.4rem;}
+    .nav .brand small{display:none;}
+  }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important;}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <div class="brand">АРАЙ<small>ТАРГЕТ · МАРКЕТИНГ · ИИ</small></div>
+    <a class="cta" href="https://wa.me/77785108842?text=%D0%9C%D0%BD%D0%B5%20%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%B5%D1%81%D0%BD%D0%BE%20%D0%BE%D0%B1%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.8 4.9-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-1.7-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9 0-1.3.7-2 .9-2.3.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.5.7 1.8.8 1.9.1.1.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.1-.3.3-.1.6.1.3.7 1.1 1.4 1.7.9.8 1.7 1.1 2 1.2.2.1.4.1.5-.1l.7-.8c.2-.2.3-.2.6-.1.2.1 1.5.7 1.7.9.3.1.4.2.5.3 0 .1 0 .7-.1 1Z"/></svg>
+      Мне интересно
+    </a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow"><b></b> Обучение таргетингу с поддержкой до результата</span>
+    <h1>Таргет, который приводит клиентов из <span class="em">Дубая, Нью-Йорка и Парижа</span></h1>
+    <p class="hero-sub">Профессия, в которой можно зарабатывать в тенге, долларах и евро. Я провожу с нуля до первых клиентов — с разбором каждого созвона и поддержкой, пока не появится результат.</p>
+    <div class="hero-cta-row">
+      <a class="cta" href="https://wa.me/77785108842?text=%D0%9C%D0%BD%D0%B5%20%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%B5%D1%81%D0%BD%D0%BE%20%D0%BE%D0%B1%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.8 4.9-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-1.7-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9 0-1.3.7-2 .9-2.3.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.5.7 1.8.8 1.9.1.1.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.1-.3.3-.1.6.1.3.7 1.1 1.4 1.7.9.8 1.7 1.1 2 1.2.2.1.4.1.5-.1l.7-.8c.2-.2.3-.2.6-.1.2.1 1.5.7 1.7.9.3.1.4.2.5.3 0 .1 0 .7-.1 1Z"/></svg>
+        Мне интересно обучение
+      </a>
+      <span class="hero-note">Напишите в WhatsApp — расскажу детали и подберём формат</span>
+    </div>
+    <div class="stamps">
+      <span class="stamp" style="--r:-2deg">Дубай <small>450 000 ₸</small></span>
+      <span class="stamp" style="--r:1.5deg">США <small>$2300 / мес</small></span>
+      <span class="stamp" style="--r:-1deg">Франция <small>€800 → €1100</small></span>
+      <span class="stamp" style="--r:2deg">Бостон <small>предоплата 50%</small></span>
+      <span class="stamp" style="--r:-1.5deg">Нью-Йорк · Манхэттен</span>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-tag">Зачем это вам</div>
+    <h2>Не просто «уроки», а профессия, которая кормит из любой точки мира</h2>
+    <p class="lead">Таргетолог нужен каждому бизнесу — от локального магазина до онлайн-школы в США. Вы учитесь один раз, а зарабатывать можете в нескольких валютах одновременно.</p>
+    <div class="trans-grid">
+      <div class="tcard"><div class="ic">01</div><h3>Удалённо и без потолка</h3><p>Работа из дома, телефона или другой страны. Один клиент в тенге, второй — в долларах, третий — в евро.</p></div>
+      <div class="tcard"><div class="ic">02</div><h3>Выход на зарубеж</h3><p>Отдельные модули по США, Франции, ОАЭ: где искать клиентов, как закрывать и принимать оплату.</p></div>
+      <div class="tcard"><div class="ic">03</div><h3>Сильный навык — ИИ</h3><p>Генерация фото и видео, ИИ-боты, автоматизация и ИИ-агенты. Доп. услуги, за которые платят отдельно.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section results">
+  <div class="wrap">
+    <div class="section-tag">Результаты учеников</div>
+    <h2>Это не обещания — это переписки и поступления</h2>
+    <p class="lead">Скриншоты от учеников, которые закрывают клиентов в Казахстане и за рубежом уже во время обучения.</p>
+    <div class="stat-row">
+      <div class="stat"><b>$2300</b><span>чек за онлайн-школу в США</span></div>
+      <div class="stat"><b>450 000 ₸</b><span>клиент из ОАЭ</span></div>
+      <div class="stat"><b>€800 → €1100</b><span>клиент во Франции</span></div>
+      <div class="stat"><b>50%</b><span>предоплата от клиента из Бостона</span></div>
+    </div>
+    <div class="proof-grid">
+      <figure><img src="otzyv-7.jpg" alt="Переписки учеников: клиенты из США, ОАЭ и Франции" loading="lazy"></figure>
+      <figure><img src="otzyv-4.jpg" alt="Ученица закрыла клиента из ОАЭ на 450 000" loading="lazy"></figure>
+      <figure><img src="otzyv-8.jpg" alt="Клиент из Бостона прислал предоплату 50%" loading="lazy"></figure>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-tag">Программа</div>
+    <h2>13 модулей — от первого рекламного кабинета до клиентов за рубежом</h2>
+    <p class="lead">Нажмите на модуль, чтобы раскрыть уроки. Короткие уроки без воды, доступ на год.</p>
+    <div class="prog-grid">
+
+      <details class="mod">
+        <summary class="mod-head"><span class="n">1</span><div class="mod-body"><h3>Знакомство с Facebook</h3><p>БМ, бизнес-страница, рекламный аккаунт, термины, антидетект-браузеры.</p></div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <ul class="lessons">
+          <li>Урок 0. Знакомство и правила</li>
+          <li>Урок 1. Кто такой таргетолог + этапы работы</li>
+          <li>Урок 2. Бизнес-менеджер, бизнес-страница</li>
+          <li>Урок 3. Рекламный аккаунт</li>
+          <li>Урок 4. Разбор терминов</li>
+          <li>Урок 5. Антидетект-браузеры</li>
+        </ul>
+      </details>
+
+      <details class="mod">
+        <summary class="mod-head"><span class="n">2</span><div class="mod-body"><h3>Поиск клиентов</h3><p>Рассылки и таргет на себя, +8 методов поиска, продажи.</p></div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <ul class="lessons">
+          <li>Урок 1. Рассылки на себя</li>
+          <li>Урок 2. Таргет на себя</li>
+          <li>Урок 3. Дополнительные методы поиска клиентов (+8 методов)</li>
+          <li>Урок 4. Урок по продажам</li>
+          <li>Урок 5. Доп. урок от эксперта по продажам с опытом 5 лет</li>
+        </ul>
+      </details>
+
+      <details class="mod">
+        <summary class="mod-head"><span class="n">3</span><div class="mod-body"><h3>Анализ целевой аудитории</h3><p>Методы 5W и БПСВ, сегментация, лайфхаки.</p></div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <ul class="lessons">
+          <li>Урок 1. Анализ ЦА по методу 5W</li>
+          <li>Урок 2. Анализ ЦА по методу БПСВ</li>
+          <li>Урок 3. Сегментация аудитории</li>
+          <li>Лайфхаки по анализу ЦА</li>
+        </ul>
+      </details>
+
+      <details class="mod">
+        <summary class="mod-head"><span class="n">4</span><div class="mod-body"><h3>Офферы и креативы</h3><p>Формула офферов, метод AIDA, Figma и Canva.</p></div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <ul class="lessons">
+          <li>Урок 1. Составление офферов</li>
+          <li>Урок 2. Составление креативов методом AIDA</li>
+          <li>Формула работающих офферов</li>
+          <li>Урок 3. Работа в Figma</li>
+          <li>Урок 4. Работа в Canva</li>
+        </ul>
+      </details>
+
+      <details class="mod">
+        <summary class="mod-head"><span class="n">5</span><div class="mod-body"><h3>Техническая часть</h3><p>Цели, пиксели, аудитории, ретаргет, масштабирование.</p></div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <ul class="lessons">
+          <li>Урок 1. Обзор рекламного кабинета + цель «Трафик»</li>
+          <li>Урок 2. Выдача доступа таргетологу</li>
+          <li>Урок 3. Цель «Вовлечённость»</li>
+          <li>Урок 4. Цель «Генерация лидов»</li>
+          <li>Урок 5. Пиксели</li>
+          <li>Урок 6. Цель «Конверсия»</li>
+          <li>Урок 7. Основные метрики Facebook</li>
+          <li>Урок 8. Аудитории</li>
+          <li>Урок 9. Масштабирование + бюджет</li>
+          <li>Урок 10. Ретаргет</li>
+          <li>Урок 11. Покупка и привязка аккаунтов</li>
+        </ul>
+      </details>
+
+      <details class="mod">
+        <summary class="mod-head"><span class="n">6</span><div class="mod-body"><h3>Блокировки</h3><p>Почему банят аккаунты и как их фармить и греть.</p></div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <ul class="lessons">
+          <li>Урок 1. Почему блокируют БМ, БС, РК, социк</li>
+          <li>Урок 2. Как правильно фармить / греть аккаунты</li>
+        </ul>
+      </details>
+
+      <details class="mod">
+        <summary class="mod-head"><span class="n">7</span><div class="mod-body"><h3>Работа с мышлением</h3><p>Взрослая позиция, установки, борьба с тревожностью.</p></div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <ul class="lessons">
+          <li>Урок 1. Взрослая позиция</li>
+          <li>Урок 2. Техники исполнения желаний</li>
+          <li>Урок 3. Работа с установками</li>
+          <li>Урок 4. Практики для увеличения денежной ёмкости</li>
+          <li>Урок 5. Борьба с тревожностью</li>
+        </ul>
+      </details>
+
+      <details class="mod">
+        <summary class="mod-head"><span class="n">8</span><div class="mod-body"><h3>Маркетинг</h3><p>Стратегии, конкуренты, воронки, контент, вирусный маркетинг.</p></div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <ul class="lessons">
+          <li>Урок 1. Маркетинговые стратегии</li>
+          <li>Урок 2. Анализ аудитории</li>
+          <li>Урок 3. Анализ конкурентов</li>
+          <li>Урок 4. Анализ бизнеса</li>
+          <li>Урок 5. Воронки продаж</li>
+          <li>Урок 6. Контент-маркетинг</li>
+          <li>Урок 7. Фишки крупных брендов</li>
+          <li>Урок 8. Вирусный маркетинг</li>
+        </ul>
+      </details>
+
+      <details class="mod">
+        <summary class="mod-head"><span class="n">9</span><div class="mod-body"><h3>Зарубежный рынок</h3><p>Upwork, Fiverr, Indeed, LinkedIn, оплата и договор.</p></div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <ul class="lessons">
+          <li>Урок 1. Upwork</li>
+          <li>Урок 2. Fiverr</li>
+          <li>Урок 3. Indeed</li>
+          <li>Урок 4. Поиск русскоговорящих клиентов за рубежом</li>
+          <li>Урок 5. Лидогенерация через Facebook</li>
+          <li>Урок 6. Лидогенерация через LinkedIn</li>
+          <li>Урок 7. Email-маркетинг</li>
+          <li>Урок 8. Доп. способы поиска клиентов</li>
+          <li>Урок 9. Какие креативы работают на зарубеже</li>
+          <li>Урок 10. Как принимать оплату</li>
+          <li>Урок 11. Как заключать договор</li>
+          <li>Урок 12. Система работы с зарубежом</li>
+        </ul>
+      </details>
+
+      <details class="mod">
+        <summary class="mod-head"><span class="n">10</span><div class="mod-body"><h3>Воронки и автоворонки</h3><p>Чат-боты, таргет в LinkedIn, Twitter, Google, Pinterest, TikTok.</p></div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <ul class="lessons">
+          <li>Урок 1. Чат-бот</li>
+          <li>Урок 2. Автоворонки</li>
+          <li>Урок 3. Воронки продаж</li>
+          <li>Урок 4. Таргет в LinkedIn</li>
+          <li>Урок 5. Таргет в Twitter</li>
+          <li>Урок 6. Таргет в Google</li>
+          <li>Урок 7. Таргет в Pinterest</li>
+          <li>Урок 8. Таргет в TikTok</li>
+        </ul>
+      </details>
+
+      <details class="mod feat">
+        <summary class="mod-head"><span class="n">11</span><div class="mod-body"><span class="badge">Обновлено</span><h3>Искусственный интеллект и заработок на ИИ</h3><p>Генерация фото и видео, ИИ-боты, автоматизация, ИИ-агенты и блок «ИИ-маркетолог».</p></div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <ul class="lessons">
+          <li>ИИ-ассистент: как зарабатывать от 200к за клиента с помощью ИИ</li>
+          <li>Генерация фото с помощью ИИ (для креативов и контента)</li>
+          <li>Генерация видео с помощью ИИ (рилс, видеокреативы)</li>
+          <li>Google Gemini в работе таргетолога</li>
+          <li>ИИ-боты: создание и подключение через NextBot</li>
+          <li>Автоматизация в Make.com (3+ сценария: связки, воронки, обработка лидов)</li>
+          <li>ИИ-агенты: как создавать и внедрять клиентам</li>
+          <li>Как зарабатывать на ИИ-услугах (боты, агенты, автоматизация)</li>
+          <li>Блок «ИИ-маркетолог»: офферы, креативы и стратегии через ИИ</li>
+          <li>Анализ ЦА и конкурентов, контент и воронки с помощью ИИ</li>
+        </ul>
+      </details>
+
+      <details class="mod">
+        <summary class="mod-head"><span class="n">12</span><div class="mod-body"><h3>Доп. способы заработка</h3><p>Серый трафик, кнопка «Продвигать», онлайн-школы, инфобизнес.</p></div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <ul class="lessons">
+          <li>Урок 1. Серый трафик: как зарабатывать от $1000 с клиента</li>
+          <li>Урок 2. Кнопка «Продвигать»</li>
+          <li>Урок 3. Как закрывать онлайн-школы на чек от 500к тенге</li>
+          <li>Урок 4. Как работать с инфобизнесом</li>
+          <li>Урок 5. Таргет в LinkedIn</li>
+          <li>Урок 6. Таргет в Google</li>
+          <li>Урок 7. Таргет в Pinterest</li>
+          <li>Урок 8. Таргет в TikTok</li>
+        </ul>
+      </details>
+
+      <details class="mod">
+        <summary class="mod-head"><span class="n">13</span><div class="mod-body"><h3>Аналитика в таргете</h3><p>Google и Яндекс аналитика, WordPress, отчётность.</p></div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <ul class="lessons">
+          <li>Урок 1. Как анализировать рекламу</li>
+          <li>Урок 2. Google Аналитика</li>
+          <li>Урок 3. Яндекс Аналитика</li>
+          <li>Урок 4. Работа с WordPress</li>
+          <li>Урок 5. Составление отчётности клиентам</li>
+        </ul>
+      </details>
+
+      <details class="mod">
+        <summary class="mod-head"><span class="n">+</span><div class="mod-body"><h3>Ведение блога</h3><p>Упаковка блога, привлечение аудитории, рилс, кейсы.</p></div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <ul class="lessons">
+          <li>Урок 1. Как упаковать свой блог</li>
+          <li>Урок 2. Как привлекать аудиторию</li>
+          <li>Урок 3. Форматы рилс для таргетологов</li>
+          <li>Урок 4. Упаковка кейсов в блоге</li>
+        </ul>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<section class="section format">
+  <div class="wrap">
+    <div class="section-tag">Как проходит обучение</div>
+    <h2>Сопровождение, а не просто доступ к платформе</h2>
+    <div class="fmt-grid">
+      <div class="fmt"><span class="ck">✓</span><p><b>1 неделя предобучения + 8 недель</b> основной программы.</p></div>
+      <div class="fmt"><span class="ck">✓</span><p><b>Индивидуальный созвон раз в неделю</b> — с записью, чтобы пересмотреть.</p></div>
+      <div class="fmt"><span class="ck">✓</span><p><b>Уроки в записи</b> на платформе, доступ <b>на год</b>.</p></div>
+      <div class="fmt"><span class="ck">✓</span><p><b>Практика продающих созвонов</b> лично со мной.</p></div>
+      <div class="fmt"><span class="ck">✓</span><p><b>Выдача лидов</b> — после того как первого клиента вы нашли сами.</p></div>
+      <div class="fmt"><span class="ck">✓</span><p><b>Мои кейсы по Казахстану и зарубежу</b> — используете в своих продажах.</p></div>
+      <div class="fmt"><span class="ck">✓</span><p><b>Поддержка на связи</b>, в том числе психологическая — об этом пишут сами ученики.</p></div>
+      <div class="fmt"><span class="ck">✓</span><p><b>13 модулей + ведение блога</b> — от основ до выхода на зарубеж.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-tag">Отзывы</div>
+    <h2>Что говорят ученики</h2>
+    <div class="quotes">
+      <div class="quote"><span class="mark">“</span><p>Учусь почти полтора месяца — буст идёт точечный. Был запрос решить проблему клиентов — решили. С Гугл Аналитикой и контекстом — тоже решили. Успокаивает, что ты всегда на связи и готова помочь в срочных вопросах.</p><div class="who">— ученик курса</div></div>
+      <div class="quote"><span class="mark">“</span><p>Уроки без долгих вступлений, сразу к делу. Отдельная благодарность за детальный сценарий созвона с клиентом — чёткий алгоритм от «здравствуйте» до закрытия сделки.</p><div class="who">— ученица курса</div></div>
+      <div class="quote"><span class="mark">“</span><p>После вас отписалась от других обучающих таргетологов — ваш курс закрывает все пробелы и вопросы. Нравится краткость, сдержанность и трудолюбие. Спасибо от чистого сердца.</p><div class="who">— ученица курса</div></div>
+      <div class="quote"><span class="mark">“</span><p>Я до вас брала обучение дороже, но не получила таких знаний и подхода, как от вас. Вы очень меня вдохновляете — появляется вера, что и я могу добиться.</p><div class="who">— ученица курса</div></div>
+    </div>
+    <div class="proof-grid" style="margin-top:1.6rem;">
+      <figure><img src="otzyv-5.jpg" alt="Отзыв ученицы: взяла 3 проекта" loading="lazy"></figure>
+      <figure><img src="otzyv-1.jpg" alt="Отзыв ученика о поддержке" loading="lazy"></figure>
+      <figure><img src="otzyv-2.jpg" alt="Отзыв о сценарии созвона" loading="lazy"></figure>
+      <figure><img src="otzyv-3.jpg" alt="Отзыв: курс закрывает все пробелы" loading="lazy"></figure>
+      <figure><img src="otzyv-6.jpg" alt="Отзыв: подход и мышление" loading="lazy"></figure>
+    </div>
+  </div>
+</section>
+
+<section class="final" id="start">
+  <div class="wrap">
+    <h2>Готовы зарабатывать на таргете?</h2>
+    <p>Напишите мне в WhatsApp — расскажу про формат, ближайший поток и как выйти на первых клиентов, в том числе за рубежом.</p>
+    <a class="cta" href="https://wa.me/77785108842?text=%D0%9C%D0%BD%D0%B5%20%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%B5%D1%81%D0%BD%D0%BE%20%D0%BE%D0%B1%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.8 4.9-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-1.7-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9 0-1.3.7-2 .9-2.3.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.5.7 1.8.8 1.9.1.1.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.1-.3.3-.1.6.1.3.7 1.1 1.4 1.7.9.8 1.7 1.1 2 1.2.2.1.4.1.5-.1l.7-.8c.2-.2.3-.2.6-.1.2.1 1.5.7 1.7.9.3.1.4.2.5.3 0 .1 0 .7-.1 1Z"/></svg>
+      Мне интересно обучение
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-inner">
+    <div class="brand">АРАЙ</div>
+    <div>Таргетинг · Маркетинг · ИИ — обучение с поддержкой до результата</div>
+  </div>
+</footer>
+
+</body>
+</html>
