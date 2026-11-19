@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Арай · Обучение таргету</title>
+<meta name="description" content="Обучение таргетингу с поддержкой до результата: клиенты из США, Дубая и Гонконга, ИИ-навыки и личное сопровождение">
+<!-- Сюда вставь код пикселя Meta и Яндекс Метрики -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: тёмный люкс, фиолетовое свечение, золото для цифр и акцентов; асимметричный герой, дальше секции с левым выравниванием */
+:root{
+  --bg:#0A0810;
+  --surface:#14101E;
+  --surface-2:#1C1630;
+  --line:#2C2342;
+  --purple:#8B5CF6;
+  --purple-deep:#3A1D72;
+  --gold:#D9B26F;
+  --gold-soft:#F0D9A8;
+  --text:#F4F0FA;
+  --muted:#A99FBC;
+  --font-display:"Unbounded", "Arial Black", system-ui, sans-serif;
+  --font-body:"Manrope", "Segoe UI", system-ui, sans-serif;
+  --radius:18px;
+  --wrap:1160px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+h1,h2,h3{font-family:var(--font-display);line-height:1.12;text-wrap:balance;letter-spacing:-.01em}
+h2{font-size:clamp(28px,4.2vw,46px);font-weight:700}
+h3{font-size:19px;font-weight:600}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 20px}
+section{padding:96px 0;position:relative}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.eyebrow::before{content:"";width:28px;height:1px;background:var(--gold)}
+.lead{color:var(--muted);font-size:19px;max-width:640px}
+.gold{color:var(--gold)}
+.num{font-variant-numeric:tabular-nums}
+.head{display:grid;gap:18px;margin-bottom:48px;max-width:760px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:16px 28px;border-radius:999px;font-weight:700;font-size:16px;text-decoration:none;transition:transform .2s, box-shadow .2s, background .2s;border:1px solid transparent;white-space:nowrap}
+.btn:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.btn-gold{background:linear-gradient(135deg,var(--gold-soft),var(--gold) 55%,#B8893F);color:#1A1206;box-shadow:0 10px 30px -10px rgba(217,178,111,.6)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 16px 36px -10px rgba(217,178,111,.75)}
+.btn-ghost{border-color:var(--line);color:var(--text);background:rgba(139,92,246,.08)}
+.btn-ghost:hover{border-color:var(--purple);background:rgba(139,92,246,.18)}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:50;background:rgba(10,8,16,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:72px;gap:20px}
+.logo{font-family:var(--font-display);font-weight:800;font-size:18px;letter-spacing:.04em;text-decoration:none}
+.logo span{color:var(--gold)}
+.nav-links{display:flex;gap:28px;font-size:15px;font-weight:600;color:var(--muted)}
+.nav-links a{text-decoration:none}
+.nav-links a:hover{color:var(--text)}
+.nav .btn{padding:11px 20px;font-size:14px}
+@media (max-width:900px){.nav-links{display:none}}
+
+/* hero */
+.hero{padding:88px 0 96px;overflow:hidden}
+.hero::before{content:"";position:absolute;width:900px;height:900px;right:-300px;top:-380px;background:radial-gradient(circle,rgba(139,92,246,.35),transparent 62%);pointer-events:none}
+.hero::after{content:"";position:absolute;width:600px;height:600px;left:-260px;bottom:-320px;background:radial-gradient(circle,rgba(217,178,111,.12),transparent 65%);pointer-events:none}
+.hero-grid{display:grid;grid-template-columns:1.25fr .85fr;gap:56px;align-items:center;position:relative;z-index:1}
+.hero h1{font-size:clamp(36px,5.8vw,68px);font-weight:800;margin:22px 0 24px}
+.hero h1 em{font-style:normal;background:linear-gradient(120deg,var(--gold-soft),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:36px}
+.checks{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:28px;color:var(--muted);font-size:15px}
+.checks span::before{content:"✦ ";color:var(--gold)}
+.tiles{display:grid;gap:14px}
+.tiles-cap{font-size:13px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+.tile{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 24px;border-radius:var(--radius);background:linear-gradient(160deg,var(--surface-2),var(--surface));border:1px solid var(--line)}
+.tile:first-of-type{border-color:rgba(217,178,111,.45);box-shadow:0 20px 60px -30px rgba(217,178,111,.5)}
+.tile b{font-family:var(--font-display);font-size:30px;font-weight:700;color:var(--gold)}
+.tile small{display:block;color:var(--muted);font-size:14px}
+.tile .city{font-weight:700;font-size:16px}
+.hero-grid > *{min-width:0}
+@media (max-width:900px){.hero-grid{grid-template-columns:1fr}}
+@media (max-width:520px){.btn{white-space:normal;text-align:center;width:100%}.nav .btn{width:auto}.eyebrow{font-size:12px}}
+
+/* about */
+.about-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:56px;align-items:start}
+.photo{aspect-ratio:4/5;border-radius:24px;overflow:hidden;position:relative;background:radial-gradient(circle at 30% 20%,var(--purple-deep),var(--surface) 70%);border:1px solid var(--line)}
+.photo img{width:100%;height:100%;object-fit:cover}
+.photo .mono{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--font-display);font-size:120px;font-weight:800;color:rgba(217,178,111,.35)}
+.photo img + .mono{display:none}
+.story{display:grid;gap:18px}
+.story p{color:var(--muted);max-width:620px}
+.story p strong{color:var(--text);font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+.stat{padding:20px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}
+.stat b{display:block;font-family:var(--font-display);font-size:24px;color:var(--gold);line-height:1.2}
+.stat span{font-size:14px;color:var(--muted)}
+@media (max-width:900px){.about-grid{grid-template-columns:1fr}.photo{max-width:420px}}
+@media (max-width:520px){.stats{grid-template-columns:1fr}}
+
+/* method */
+.method{background:linear-gradient(180deg,var(--bg),#120C22 50%,var(--bg))}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;counter-reset:s}
+.step{padding:30px 28px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--line);display:grid;gap:12px;align-content:start}
+.step .n{font-family:var(--font-display);font-size:14px;color:var(--purple);font-weight:700;letter-spacing:.1em}
+.step p{color:var(--muted);font-size:16px}
+.callout{margin-top:22px;padding:24px 28px;border-radius:var(--radius);border:1px solid rgba(217,178,111,.4);background:rgba(217,178,111,.06);display:flex;gap:18px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+.callout p{max-width:720px}
+@media (max-width:900px){.steps{grid-template-columns:1fr}}
+
+/* cases */
+.cases-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.case{border-radius:16px;overflow:hidden;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column}
+.case .shot{aspect-ratio:3/4;background:linear-gradient(160deg,var(--purple-deep),var(--surface-2));position:relative;overflow:hidden}
+.case .shot img{width:100%;height:100%;object-fit:cover;object-position:top}
+.case .shot .ph{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--font-display);font-size:26px;color:var(--gold);padding:12px;text-align:center}
+.case .shot img + .ph{display:none}
+.case .cap{padding:14px 16px;font-size:14px;color:var(--muted);line-height:1.45}
+.case .cap .who{display:block;color:var(--text);font-weight:700;font-size:15px;margin-bottom:2px}
+.case .cap b{display:block;color:var(--gold);font-family:var(--font-display);font-size:18px;margin-bottom:4px;font-weight:600}
+.quotes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}
+.quote{padding:28px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--purple)}
+.quote p{font-size:17px}
+.quote span{display:block;margin-top:12px;color:var(--muted);font-size:14px}
+@media (max-width:1000px){.cases-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:700px){.quotes{grid-template-columns:1fr}}
+
+/* program */
+.prog-meta{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:32px}
+.chip{padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-size:14px;font-weight:600}
+.chip b{color:var(--gold)}
+.modules{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mod{display:grid;grid-template-columns:56px 1fr;gap:16px;padding:22px 24px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}
+.mod .i{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--purple)}
+.mod h3{font-size:17px;margin-bottom:6px}
+.cnt{display:inline-block;margin-left:6px;padding:2px 9px;border-radius:999px;background:rgba(139,92,246,.18);color:#C9B5FF;font-family:var(--font-body);font-size:12px;font-weight:700;vertical-align:2px;white-space:nowrap}
+.mod p{font-size:15px;color:var(--muted)}
+.mod .res{margin-top:8px;font-size:14px;color:var(--gold-soft)}
+.mod.bonus{border-color:rgba(217,178,111,.45);background:linear-gradient(160deg,rgba(217,178,111,.08),var(--surface))}
+.mod.bonus .i{color:var(--gold)}
+@media (max-width:860px){.modules{grid-template-columns:1fr}}
+
+/* ai */
+.ai{background:radial-gradient(ellipse at 80% 0%,rgba(139,92,246,.22),transparent 55%),var(--bg)}
+.ai-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.svc{display:grid;gap:0;border-radius:var(--radius);border:1px solid var(--line);overflow:hidden;background:var(--surface)}
+.svc div{display:flex;justify-content:space-between;gap:16px;padding:16px 22px;border-bottom:1px solid var(--line);font-size:15px}
+.svc div:last-child{border-bottom:none}
+.svc b{color:var(--gold);white-space:nowrap;font-variant-numeric:tabular-nums}
+.kits{display:grid;gap:12px}
+.kit{padding:20px 22px;border-radius:16px;background:var(--surface-2);border:1px solid var(--line)}
+.kit h3{font-size:16px;margin-bottom:4px}
+.kit p{font-size:15px;color:var(--muted)}
+@media (max-width:900px){.ai-grid{grid-template-columns:1fr}}
+
+/* support */
+.support-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.sup{padding:24px 20px;border-radius:16px;background:var(--surface);border:1px solid var(--line);display:grid;gap:10px;align-content:start}
+.sup svg{width:28px;height:28px;stroke:var(--gold)}
+.sup h3{font-size:16px}
+.sup p{font-size:14px;color:var(--muted)}
+@media (max-width:1000px){.support-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.support-grid{grid-template-columns:1fr}}
+
+/* format */
+.format-card{display:grid;grid-template-columns:1.1fr .9fr;gap:0;border-radius:28px;overflow:hidden;border:1px solid rgba(217,178,111,.45);background:linear-gradient(140deg,#1E1238,var(--surface) 60%)}
+.format-card .l{padding:44px}
+.format-card .r{padding:44px;background:rgba(0,0,0,.25);border-left:1px solid var(--line);display:grid;gap:18px;align-content:center}
+.format-card h3{font-size:clamp(26px,3vw,34px);margin:14px 0 22px}
+.list{list-style:none;display:grid;gap:12px}
+.list li{padding-left:28px;position:relative}
+.list li::before{content:"";position:absolute;left:0;top:9px;width:14px;height:8px;border-left:2px solid var(--gold);border-bottom:2px solid var(--gold);transform:rotate(-45deg)}
+.format-card .r p{color:var(--muted)}
+.price{display:grid;gap:6px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.price-tag{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple)}
+.price b{font-family:var(--font-display);font-size:clamp(36px,4.5vw,48px);color:var(--gold);line-height:1.1}
+.price-row{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.price s{font-family:var(--font-display);font-size:22px;color:var(--muted);text-decoration-color:var(--purple);text-decoration-thickness:2px}
+.price-note{font-size:15px;color:var(--text)}
+.price-note + .price-note{color:var(--muted);font-size:14px}
+.stat b{overflow-wrap:anywhere}
+.wait{margin-top:18px;color:var(--muted);font-size:15px}
+.wait a{color:var(--gold)}
+@media (max-width:860px){.format-card{grid-template-columns:1fr}.format-card .r{border-left:none;border-top:1px solid var(--line)}.format-card .l,.format-card .r{padding:30px 24px}}
+
+/* faq */
+.faq{display:grid;gap:10px;max-width:860px}
+details{border-radius:16px;background:var(--surface);border:1px solid var(--line);padding:0 24px}
+details[open]{border-color:var(--purple)}
+summary{cursor:pointer;list-style:none;padding:22px 0;font-weight:700;font-size:17px;display:flex;justify-content:space-between;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-family:var(--font-display);color:var(--gold);font-size:22px;line-height:1}
+details[open] summary::after{content:"–"}
+summary:focus-visible{outline:2px solid var(--gold);outline-offset:4px;border-radius:6px}
+details p{padding:0 0 22px;color:var(--muted);max-width:720px}
+
+/* final */
+.final{padding:110px 0}
+.final-box{position:relative;overflow:hidden;border-radius:32px;padding:72px 48px;background:radial-gradient(circle at 85% 10%,rgba(139,92,246,.55),transparent 55%),radial-gradient(circle at 10% 100%,rgba(217,178,111,.18),transparent 50%),#120B22;border:1px solid var(--line)}
+.final-box h2{max-width:760px;margin:16px 0 18px}
+.final-box .lead{margin-bottom:34px}
+@media (max-width:600px){.final-box{padding:48px 24px}}
+
+footer{border-top:1px solid var(--line);padding:36px 0;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media (max-width:600px){section{padding:72px 0}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="#top">АРАЙ<span>·</span>ТАРГЕТ</a>
+    <nav class="nav-links" aria-label="Разделы">
+      <a href="#about">Обо мне</a>
+      <a href="#method">Метод</a>
+      <a href="#cases">Кейсы</a>
+      <a href="#program">Программа</a>
+      <a href="#format">Формат</a>
+      <a href="#faq">Вопросы</a>
+    </nav>
+    <a class="btn btn-gold" href="https://wa.me/77785108842?text=%D0%9C%D0%BD%D0%B5%20%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%B5%D1%81%D0%BD%D0%BE%20%D0%BE%D0%B1%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5" target="_blank" rel="noopener">Подать заявку</a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Обучение таргету с поддержкой до результата</span>
+      <h1>Таргет, который приводит клиентов из <em>Дубая, Нью-Йорка и Гонконга</em></h1>
+      <p class="lead">Профессия, где ты зарабатываешь в долларах и работаешь откуда хочешь. Я веду с нуля до первых клиентов и остаюсь рядом, пока они не появятся</p>
+      <div class="hero-cta">
+        <a class="btn btn-gold" href="https://wa.me/77785108842?text=%D0%9C%D0%BD%D0%B5%20%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%B5%D1%81%D0%BD%D0%BE%20%D0%BE%D0%B1%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5" target="_blank" rel="noopener">Подать заявку на обучение</a>
+      </div>
+      <div class="checks">
+        <span>Английский на старте не нужен</span>
+        <span>100 уроков</span>
+        <span>Личные созвоны каждую неделю</span>
+      </div>
+    </div>
+    <div class="tiles" aria-label="Чеки учеников">
+      <span class="tiles-cap">Чеки моих учеников</span>
+      <div class="tile"><div><span class="city">Гонконг</span><small>Маржан, клиент в месяц</small></div><b class="num">$5 500</b></div>
+      <div class="tile"><div><span class="city">Нью-Йорк</span><small>Маржан, клиент после переезда в США</small></div><b class="num">$3 000</b></div>
+      <div class="tile"><div><span class="city">США</span><small>Алишер, онлайн-школа</small></div><b class="num">$2 300</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="wrap about-grid">
+    <div class="photo">
+      <!-- Положи своё фото в папку сайта под именем arai.jpg -->
+      <img src="arai.jpg" alt="Арай, таргетолог" onerror="this.remove()">
+      <div class="mono" aria-hidden="true">А</div>
+    </div>
+    <div class="story">
+      <span class="eyebrow">Кто тебя учит</span>
+      <h2>Привет, я Арай</h2>
+      <p><strong>Больше 4 лет в таргете</strong>. Сейчас веду клиентов из США, Канады и Англии, собираю сайты под ключ и внедряю ИИ-автоматизации</p>
+      <p>В 2022 году мне срочно нужны были деньги, и я взяла 15 клиентов из СНГ одновременно. Через полтора месяца я выгорела и посчитала: двух зарубежных клиентов по $1 000 мне хватит, чтобы спокойно жить</p>
+      <p><strong>С этого начался мой выход на зарубежный рынок</strong></p>
+      <p>Опыт с иностранными клиентами привёл меня в американскую компанию: работаю удалённо <strong>менеджером по трафику</strong>. А ещё я живу в Шанхае, и даже здесь, в Китае, ко мне приходят компании за консалтингом именно из-за международного опыта</p>
+      <p>Зарубежный опыт открывает двери, о которых ты сейчас даже не думаешь. Этот путь я и показываю в обучении, на своих настоящих кейсах и инструментах</p>
+      <div class="stats">
+        <div class="stat"><b class="num">4+</b><span>года практики в таргете</span></div>
+        <div class="stat"><b>США · Канада · Англия</b><span>мои клиенты сейчас</span></div>
+        <div class="stat"><b class="num">100</b><span>уроков в программе</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- METHOD -->
+<section id="method" class="method">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Мой метод</span>
+      <h2>Первый клиент в США, даже если английский пока слабый</h2>
+      <p class="lead">Ты начинаешь там, где тебя понимают с полуслова, и растёшь дальше</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="n">ШАГ 01</span>
+        <h3>Русскоязычный бизнес в США</h3>
+        <p>Старт с предпринимателями, которые говорят по-русски. Чеки американские, общение на родном языке</p>
+      </div>
+      <div class="step">
+        <span class="n">ШАГ 02</span>
+        <h3>Таргет на себя</h3>
+        <p>Мой самый рабочий способ найти клиента: запускаешь рекламу на себя на русскоязычных предпринимателей в Америке</p>
+      </div>
+      <div class="step">
+        <span class="n">ШАГ 03</span>
+        <h3>Оффер на английском за минуту</h3>
+        <p>Мой бот пишет готовый оффер под американскую аудиторию: вводишь нишу и цель и получаешь текст</p>
+      </div>
+    </div>
+    <div class="callout">
+      <p>Дальше выходишь на <span class="gold">Upwork и LinkedIn</span>: пишешь отклики, ведёшь профиль и получаешь заявки от иностранных клиентов</p>
+    </div>
+  </div>
+</section>
+
+<!-- CASES -->
+<section id="cases">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Кейсы учеников</span>
+      <h2>Настоящие переписки и оплаты</h2>
+      <p class="lead">Скрины от учеников, без монтажа</p>
+    </div>
+    <!--
+      ШАБЛОН РАЗБОРА КЕЙСА (добавь 3 таких блока, когда соберёшь истории):
+      Имя / ник · кем была до курса · что мешало · что сделали · через сколько пришёл клиент · сколько платит клиент
+    -->
+    <div class="cases-grid">
+      <figure class="case"><div class="shot"><img src="IMG_9128.jpg" alt="Скрин: ученица переехала в США, клиент на $3000" loading="lazy" onerror="this.remove()"><div class="ph">$3 000</div></div><figcaption class="cap"><b>$3 000</b><span class="who">Маржан</span>Переехала в США, работает с клиентом из Нью-Йорка</figcaption></figure>
+      <figure class="case"><div class="shot"><img src="IMG_9133.jpg" alt="Скрин: клиент из Гонконга на $5500 в месяц" loading="lazy" onerror="this.remove()"><div class="ph">$5 500</div></div><figcaption class="cap"><b>$5 500 / мес</b><span class="who">Маржан</span>Клиент из Гонконга</figcaption></figure>
+      <figure class="case"><div class="shot"><img src="IMG_9127.jpg" alt="Скрин: клиент из ОАЭ на 450 000 тенге" loading="lazy" onerror="this.remove()"><div class="ph">450 000 ₸</div></div><figcaption class="cap"><b>450 000 ₸</b><span class="who">Тимур</span>Клиент из ОАЭ</figcaption></figure>
+      <figure class="case"><div class="shot"><img src="IMG_9134.jpg" alt="Скрин: онлайн-школа в США, чек $2300" loading="lazy" onerror="this.remove()"><div class="ph">$2 300</div></div><figcaption class="cap"><b>$2 300</b><span class="who">Алишер</span>Онлайн-школа в США</figcaption></figure>
+      <figure class="case"><div class="shot"><img src="IMG_9129.jpg" alt="Скрин: клиенты из Дубая, оплата 600 тысяч" loading="lazy" onerror="this.remove()"><div class="ph">600 000 ₸</div></div><figcaption class="cap"><b>600 000 ₸</b><span class="who">Ассель</span>Клиенты из Дубая</figcaption></figure>
+      <figure class="case"><div class="shot"><img src="IMG_9131.jpg" alt="Скрин: клиенты из Дубая по 400 тысяч" loading="lazy" onerror="this.remove()"><div class="ph">400 000 ₸</div></div><figcaption class="cap"><b>400 000 ₸</b><span class="who">Асель</span>Клиенты из Дубая</figcaption></figure>
+      <figure class="case"><div class="shot"><img src="IMG_9132.jpg" alt="Скрин: чистая прибыль ученика 1 100 000 за месяц" loading="lazy" onerror="this.remove()"><div class="ph">1,1 млн ₸</div></div><figcaption class="cap"><b>1 100 000 ₸</b>Чистая прибыль ученика за месяц</figcaption></figure>
+      <figure class="case"><div class="shot"><img src="IMG_9130.jpg" alt="Скрин: оплата через Kaspi от клиента из США" loading="lazy" onerror="this.remove()"><div class="ph">США</div></div><figcaption class="cap"><b>Клиент из США</b>Образовательный курс, оплата через Kaspi</figcaption></figure>
+    </div>
+    <div class="quotes">
+      <blockquote class="quote"><p>Уроки без долгих вступлений, сразу к делу. Отдельная благодарность за детальный сценарий созвона с клиентом</p><span>Ученица курса</span></blockquote>
+      <blockquote class="quote"><p>После вас отписалась от других обучающих таргетологов: ваш курс закрывает все пробелы</p><span>Ученица курса</span></blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRAM -->
+<section id="program">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Программа</span>
+      <h2>12 модулей и бонус: от первого кабинета до клиентов за рубежом</h2>
+    </div>
+    <div class="prog-meta">
+      <span class="chip"><b>1 неделя</b> предобучения</span>
+      <span class="chip"><b>8 недель</b> основной программы</span>
+      <span class="chip"><b>100</b> уроков в записи</span>
+      <span class="chip">Доступ <b>на год</b></span>
+    </div>
+    <div class="modules">
+      <div class="mod"><span class="i num">01</span><div><h3>Знакомство с Facebook <span class="cnt">7 уроков</span></h3><p>Кто такой таргетолог, бизнес-инструменты, БМ и бизнес-страница, обзор кабинета, термины, антидетект и прокси, выдача доступов</p><p class="res">→ твой рабочий кабинет готов к запуску</p></div></div>
+      <div class="mod"><span class="i num">02</span><div><h3>Анализ ЦА <span class="cnt">5 уроков</span></h3><p>Теория, метод 5W, метод БПСВ, лайфхаки анализа, домашнее задание</p><p class="res">→ понимаешь, кому и что продаёт клиент</p></div></div>
+      <div class="mod"><span class="i num">03</span><div><h3>Оффер и креативы <span class="cnt">5 уроков</span></h3><p>Правила оффера, составление офферов, креативы по AIDA, работа в Figma, домашнее задание</p><p class="res">→ креативы, которые не стыдно показать американцу</p></div></div>
+      <div class="mod"><span class="i num">04</span><div><h3>Поиск клиентов <span class="cnt">6 уроков</span></h3><p>Рассылки на свои услуги, таргет на себя, другие методы поиска, три урока по продажам, включая урок от эксперта и пошаговый план</p><p class="res">→ первые заявки от потенциальных клиентов</p></div></div>
+      <div class="mod"><span class="i num">05</span><div><h3>Работа с рекламным кабинетом <span class="cnt">11 уроков</span></h3><p>Цели Трафик, Вовлечённость и Лиды, пиксели, UTM-метки, метрики, аудитории, бюджет и масштабирование, ретаргет, лиды в Telegram и Google Таблицы, покупка и привязка аккаунтов</p><p class="res">→ запускаешь и масштабируешь сама</p></div></div>
+      <div class="mod"><span class="i num">06</span><div><h3>Блокировки <span class="cnt">2 урока</span></h3><p>За что блокируют бизнес-инструменты Facebook и как правильно прогреть аккаунт</p><p class="res">→ блокировка больше не конец света</p></div></div>
+      <div class="mod"><span class="i num">07</span><div><h3>Работа с мышлением <span class="cnt">1 урок</span></h3><p>Взрослая позиция, установки, денежная ёмкость, снижение тревоги</p><p class="res">→ спокойно называешь чек в долларах</p></div></div>
+      <div class="mod"><span class="i num">08</span><div><h3>Маркетинг <span class="cnt">11 уроков</span></h3><p>Показатели, стратегии, анализ ЦА, конкурентов и бизнеса, позиционирование и УТП, воронка продаж, контент-маркетинг, фишки крупных брендов, вирусный маркетинг</p><p class="res">→ говоришь с клиентом как маркетолог</p></div></div>
+      <div class="mod"><span class="i num">09</span><div><h3>Зарубежный рынок <span class="cnt">16 уроков</span></h3><p>Нюансы зарубежа, русскоговорящие клиенты за рубежом, новая связка для США, 3 урока по поиску через Facebook, 5 уроков по Upwork, Fiverr, Indeed, LinkedIn, email-маркетинг, креативы для зарубежа</p><p class="res">→ знаешь, где и как искать клиентов за границей</p></div></div>
+      <div class="mod"><span class="i num">10</span><div><h3>Упаковка <span class="cnt">2 урока</span></h3><p>Базовая упаковка профиля и воронка в Instagram</p><p class="res">→ профиль, который продаёт тебя сам</p></div></div>
+      <div class="mod"><span class="i num">11</span><div><h3>ИИ-агенты <span class="cnt">12 уроков</span></h3><p>Как работают нейросети и ChatGPT, промптинг и продвинутые техники, основы и создание ИИ-агентов, персональный ассистент, GPT API, n8n дешевле, подключение других нейросетей и Google</p><p class="res">→ собираешь своих ИИ-агентов и ассистентов</p></div></div>
+      <div class="mod"><span class="i num">12</span><div><h3>ИИ в маркетинге <span class="cnt">1 урок</span></h3><p>Маркетинговые стратегии и сценарии с помощью Claude</p><p class="res">→ стратегии для клиентов в разы быстрее</p></div></div>
+      <div class="mod bonus"><span class="i num">+</span><div><h3>Бонус: другие площадки <span class="cnt">21 урок</span></h3><p>Реклама в Google (4 урока), таргет в TikTok (4), кнопка «Продвигать» (4), Pinterest, LinkedIn, чат-боты, воронки и автоворонки, серый трафик (5 уроков)</p><p class="res">→ больше площадок и больше услуг для клиента</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- AI -->
+<section id="ai" class="ai">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">ИИ-бонусы</span>
+      <h2>Что ты сможешь продавать после курса, кроме таргета</h2>
+      <p class="lead">Учишься делать эти продукты и получаешь готовые сборки, которые можно сразу продавать клиентам</p>
+    </div>
+    <div class="ai-grid">
+      <div>
+        <div class="svc" role="table" aria-label="Услуги и примерные чеки">
+          <div role="row"><span>Платформа для онлайн-обучения</span><b>$1 000–2 500</b></div>
+          <div role="row"><span>Мини-приложение в Telegram</span><b>от $1 300</b></div>
+          <div role="row"><span>Бот в WhatsApp с проверкой оплат Kaspi</span><b>$1 000–1 700</b></div>
+          <div role="row"><span>ИИ-куратор и дашборд аналитики</span><b>$500–1 500</b></div>
+          <div role="row"><span>Квалификатор лидов в WhatsApp</span><b>от $900</b></div>
+          <div role="row"><span>Личный ИИ-ассистент</span><b>от $700</b></div>
+          <div role="row"><span>Автопостинг и карусели</span><b>от $600</b></div>
+          <div role="row"><span>Сайт, лендинг или форма</span><b>$500–2 000</b></div>
+        </div>
+      </div>
+      <div class="kits">
+        <div class="kit"><h3>Готовые сборки</h3><p>Telegram-бот с оплатами, WhatsApp-бот с проверкой Kaspi, автообзвон</p></div>
+        <div class="kit"><h3>Своя система ИИ-анализа</h3><p>Берёт на себя рутину и ускоряет работу в 2–3 раза</p></div>
+        <div class="kit"><h3>Шаблон личного сайта</h3><p>Плюс генератор презентации стратегии для клиента</p></div>
+        <div class="kit"><h3>Генерация фото и видео, вайб-кодинг</h3><p>Сайты, приложения и ИИ-агенты без программиста, плюс как это оценивать и продавать</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUPPORT -->
+<section id="support">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Сопровождение</span>
+      <h2>Ты не остаёшься одна с записями уроков</h2>
+    </div>
+    <div class="support-grid">
+      <div class="sup"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M15 10l5-3v10l-5-3M3 7h12v10H3z"/></svg><h3>Личный созвон каждую неделю</h3><p>Со мной, с записью, чтобы пересмотреть</p></div>
+      <div class="sup"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M4 5h16v10H8l-4 4z"/></svg><h3>Репетиция продаж</h3><p>Отрабатываем созвоны с клиентом до уверенности</p></div>
+      <div class="sup"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><h3>Передача лидов</h3><p>После твоего первого клиента</p></div>
+      <div class="sup"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg><h3>Мои кейсы</h3><p>Доступ к моим реальным проектам</p></div>
+      <div class="sup"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 20s-7-4.4-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.6-7 10-7 10z"/></svg><h3>Психологическая поддержка</h3><p>Когда страшно писать первому клиенту</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FORMAT -->
+<section id="format">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Формат</span>
+      <h2>Личное наставничество</h2>
+    </div>
+    <div class="format-card">
+      <div class="l">
+        <span class="eyebrow">Места ограничены</span>
+        <h3>Всё обучение плюс я рядом</h3>
+        <ul class="list">
+          <li>12 модулей, бонусный модуль и 100 уроков</li>
+          <li>Еженедельные личные созвоны</li>
+          <li>Репетиции продаж</li>
+          <li>Разбор клиентов в твоей нише</li>
+          <li>Приоритетная поддержка</li>
+          <li>Передача лидов после первого клиента</li>
+        </ul>
+      </div>
+      <div class="r">
+        <div class="price">
+          <span class="price-tag">Последний этап скидки</span>
+          <div class="price-row"><b class="num">400 000 ₸</b><s class="num">650 000 ₸</s></div>
+          <span class="price-note">Рассрочка Kaspi на 12 месяцев, около 33 300 ₸ в месяц</span>
+          <span class="price-note">24 месяца в дни, когда Kaspi открывает такую рассрочку</span>
+        </div>
+        <p>Я беру ограниченное число учеников в поток, чтобы успевать вести каждого лично</p>
+        <a class="btn btn-gold" href="https://wa.me/77785108842?text=%D0%A5%D0%BE%D1%87%D1%83%20%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B9%20%D1%84%D0%BE%D1%80%D0%BC%D0%B0%D1%82" target="_blank" rel="noopener">Хочу личный формат</a>
+      </div>
+    </div>
+    <p class="wait">Групповой формат скоро. <a href="https://wa.me/77785108842?text=%D0%97%D0%B0%D0%BF%D0%B8%D1%88%D0%B8%D1%82%D0%B5%20%D0%B2%20%D0%BB%D0%B8%D1%81%D1%82%20%D0%BE%D0%B6%D0%B8%D0%B4%D0%B0%D0%BD%D0%B8%D1%8F%20%D0%B3%D1%80%D1%83%D0%BF%D0%BF%D1%8B" target="_blank" rel="noopener">Встать в лист ожидания</a></p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Вопросы</span>
+      <h2>Что обычно спрашивают перед стартом</h2>
+    </div>
+    <div class="faq">
+      <details><summary>Мне подойдёт, если я с нуля?</summary><p>Да. Первый модуль начинается с того, кто такой таргетолог, и знакомства с Facebook, кабинетом и терминами, а дальше идём шаг за шагом до первых клиентов</p></details>
+      <details><summary>У меня слабый английский. Это проблема?</summary><p>На старте нет. Первых клиентов ищем среди русскоязычного бизнеса в США, а офферы на английском пишет мой бот: вводишь нишу и цель и получаешь готовый текст</p></details>
+      <details><summary>Сколько стоит и есть ли рассрочка?</summary><p>Полная цена 650 000 ₸. Сейчас идёт последний этап скидки, цена 400 000 ₸. Есть рассрочка Kaspi на 12 месяцев, а когда Kaspi открывает 24 месяца, можно взять и на 24</p></details>
+      <details><summary>Сколько длится обучение?</summary><p>1 неделя предобучения и 8 недель основной программы. Уроки в записи, доступ на год, так что можно возвращаться к ним уже с клиентами</p></details>
+      <details><summary>Где искать зарубежных клиентов?</summary><p>В 9 модуле 16 уроков про это: русскоговорящий бизнес за рубежом, новая связка для США, поиск через Facebook, Upwork, Fiverr, Indeed, LinkedIn и email-маркетинг</p></details>
+      <details><summary>Что если банят рекламный аккаунт?</summary><p>Отдельный модуль про блокировки: почему они случаются и как прогревать аккаунты, чтобы их было меньше</p></details>
+      <details><summary>Что значит «поддержка до результата»?</summary><p>Я не исчезаю после уроков: еженедельные созвоны, разбор твоей ниши, репетиции продаж и передача лидов после первого клиента. Детали обсуждаем лично перед стартом</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL -->
+<section class="final">
+  <div class="wrap">
+    <div class="final-box">
+      <span class="eyebrow">Следующий поток</span>
+      <h2>Твой первый клиент в долларах ближе, чем кажется</h2>
+      <p class="lead">Напиши мне в WhatsApp: расскажу про формат, ближайший поток и с чего начнёшь именно ты</p>
+      <div class="hero-cta">
+        <a class="btn btn-gold" href="https://wa.me/77785108842?text=%D0%9C%D0%BD%D0%B5%20%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%B5%D1%81%D0%BD%D0%BE%20%D0%BE%D0%B1%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5" target="_blank" rel="noopener">Подать заявку</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>АРАЙ · Таргет, маркетинг и ИИ с поддержкой до результата</span>
+    <span>WhatsApp: +7 778 510 88 42</span>
+  </div>
+</footer>
+
+</body>
+</html>
