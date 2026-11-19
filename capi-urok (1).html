@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Бесплатный урок по Conversions API</title>
+<meta name="description" content="Бесплатный урок из обучения Арай: что такое Conversions API, чем он отличается от пикселя и как подключить его в Shopify и в Telegram-бот через Make">
+<!--
+  Сюда вставь код пикселя Meta. Полезные события для этой страницы:
+  PageView (автоматически), ViewContent (просмотр урока), Contact (клик в WhatsApp, уже подключён ниже в скрипте)
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: та же система, что на menditarget.com: чёрный фон, фиолетовое свечение, золото для акцентов; урок сверху, мост к обучению снизу */
+:root{
+  --bg:#0A0810;
+  --surface:#14101E;
+  --surface-2:#1C1630;
+  --line:#2C2342;
+  --purple:#8B5CF6;
+  --purple-deep:#3A1D72;
+  --gold:#D9B26F;
+  --gold-soft:#F0D9A8;
+  --text:#F4F0FA;
+  --muted:#A99FBC;
+  --font-display:"Unbounded", "Arial Black", system-ui, sans-serif;
+  --font-body:"Manrope", "Segoe UI", system-ui, sans-serif;
+  --radius:18px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+h1,h2,h3{font-family:var(--font-display);line-height:1.12;text-wrap:balance;letter-spacing:-.01em}
+h1{font-size:clamp(32px,5vw,58px);font-weight:800;margin:20px 0 22px}
+h1 em{font-style:normal;background:linear-gradient(120deg,var(--gold-soft),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font-size:clamp(26px,4vw,42px);font-weight:700}
+h3{font-size:18px;font-weight:600}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+section{padding:88px 0;position:relative}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.eyebrow::before{content:"";width:28px;height:1px;background:var(--gold)}
+.lead{color:var(--muted);font-size:19px;max-width:700px}
+.head{display:grid;gap:16px;margin-bottom:40px;max-width:780px}
+.gold{color:var(--gold)}
+.num{font-variant-numeric:tabular-nums}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:16px 28px;border-radius:999px;font-weight:700;font-size:16px;text-decoration:none;transition:transform .2s, box-shadow .2s, background .2s;border:1px solid transparent;white-space:nowrap}
+.btn:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.btn-gold{background:linear-gradient(135deg,var(--gold-soft),var(--gold) 55%,#B8893F);color:#1A1206;box-shadow:0 10px 30px -10px rgba(217,178,111,.6)}
+.btn-gold:hover{transform:translateY(-2px)}
+.btn-ghost{border-color:var(--line);color:var(--text);background:rgba(139,92,246,.08)}
+.btn-ghost:hover{border-color:var(--purple);background:rgba(139,92,246,.18)}
+.cta-row{display:flex;flex-wrap:wrap;gap:14px}
+
+.nav{position:sticky;top:0;z-index:50;background:rgba(10,8,16,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
+.logo{font-family:var(--font-display);font-weight:800;font-size:17px;letter-spacing:.04em;text-decoration:none}
+.logo span{color:var(--gold)}
+.nav .btn{padding:10px 20px;font-size:14px}
+
+/* hero + video */
+.hero{padding:72px 0 88px;overflow:hidden}
+.hero::before{content:"";position:absolute;width:900px;height:900px;right:-320px;top:-420px;background:radial-gradient(circle,rgba(139,92,246,.33),transparent 62%);pointer-events:none}
+.hero .wrap{position:relative;z-index:1}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.chip{padding:8px 16px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-size:14px;font-weight:600;color:var(--muted)}
+.video{margin-top:40px;aspect-ratio:16/9;border-radius:24px;overflow:hidden;background:var(--surface);border:1px solid rgba(217,178,111,.4);box-shadow:0 30px 80px -40px rgba(139,92,246,.7)}
+.video iframe{width:100%;height:100%;border:0;display:block}
+.after-video{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;margin-top:22px;color:var(--muted);font-size:15px}
+.after-video a{color:var(--gold);font-weight:700;text-decoration:none}
+.after-video a:hover{text-decoration:underline}
+
+/* analogy cards */
+.alt{background:linear-gradient(180deg,var(--bg),#120C22 50%,var(--bg))}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{padding:28px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--line);display:grid;gap:10px;align-content:start}
+.card svg{width:44px;height:44px;stroke:var(--gold);margin-bottom:6px}
+.card p{color:var(--muted);font-size:16px}
+.card.hl{border-color:rgba(139,92,246,.6);background:linear-gradient(160deg,#21143F,var(--surface))}
+.card.gold-card{border-color:rgba(217,178,111,.45);background:linear-gradient(160deg,rgba(217,178,111,.09),var(--surface))}
+@media (max-width:900px){.grid3{grid-template-columns:1fr}}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.step{padding:24px;border-radius:16px;background:var(--surface);border:1px solid var(--line);display:grid;gap:8px;align-content:start}
+.step .n{font-family:var(--font-display);font-size:26px;font-weight:700;color:var(--purple)}
+.step p{color:var(--muted);font-size:15px}
+@media (max-width:900px){.steps{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.steps{grid-template-columns:1fr}}
+
+/* flow */
+.flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:12px}
+.node{flex:1;min-width:150px;padding:22px 16px;border-radius:16px;background:var(--surface);border:1px solid var(--line);text-align:center;font-weight:700}
+.node small{display:block;font-weight:500;color:var(--muted);font-size:14px;margin-top:4px}
+.node.m{background:var(--purple-deep);border-color:var(--purple)}
+.node.g{border-color:var(--gold);color:var(--gold)}
+.arr{align-self:center;color:var(--gold);font-family:var(--font-display);font-size:22px}
+@media (max-width:700px){.arr{display:none}.node{min-width:calc(50% - 6px)}}
+
+/* bridge */
+.bridge{border-top:1px solid var(--line)}
+.why{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.why .card b{font-family:var(--font-display);font-size:15px;color:var(--gold);letter-spacing:.06em}
+@media (max-width:900px){.why{grid-template-columns:1fr}}
+
+/* about */
+.about{display:grid;grid-template-columns:.7fr 1.3fr;gap:48px;align-items:center}
+.photo{aspect-ratio:4/5;border-radius:24px;overflow:hidden;position:relative;background:radial-gradient(circle at 30% 20%,var(--purple-deep),var(--surface) 70%);border:1px solid var(--line)}
+.photo img{width:100%;height:100%;object-fit:cover}
+.photo .mono{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--font-display);font-size:110px;font-weight:800;color:rgba(217,178,111,.35)}
+.photo img + .mono{display:none}
+.about-text{display:grid;gap:16px}
+.about-text p{color:var(--muted);max-width:620px}
+.about-text p strong{color:var(--text)}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:6px}
+.fact{padding:18px;border-radius:14px;background:var(--surface);border:1px solid var(--line)}
+.fact b{display:block;font-family:var(--font-display);font-size:20px;color:var(--gold);line-height:1.25}
+.fact span{font-size:14px;color:var(--muted)}
+@media (max-width:860px){.about{grid-template-columns:1fr}.photo{max-width:360px}}
+@media (max-width:520px){.facts{grid-template-columns:1fr}}
+
+/* cases */
+.cases{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.case{padding:24px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}
+.case b{display:block;font-family:var(--font-display);font-size:30px;color:var(--gold)}
+.case strong{display:block;margin-top:8px}
+.case span{color:var(--muted);font-size:15px}
+.more{margin-top:18px}
+.more a{color:var(--gold);font-weight:700;text-decoration:none}
+.more a:hover{text-decoration:underline}
+@media (max-width:860px){.cases{grid-template-columns:1fr}}
+
+/* offer */
+.offer{display:grid;grid-template-columns:1.15fr .85fr;border-radius:28px;overflow:hidden;border:1px solid rgba(217,178,111,.45);background:linear-gradient(140deg,#1E1238,var(--surface) 60%)}
+.offer .l{padding:44px}
+.offer .r{padding:44px;background:rgba(0,0,0,.25);border-left:1px solid var(--line);display:grid;gap:18px;align-content:center}
+.offer h2{margin:14px 0 22px}
+.list{list-style:none;display:grid;gap:12px}
+.list li{padding-left:28px;position:relative}
+.list li::before{content:"";position:absolute;left:0;top:9px;width:14px;height:8px;border-left:2px solid var(--gold);border-bottom:2px solid var(--gold);transform:rotate(-45deg)}
+.list li .gold{font-weight:700}
+.price{display:grid;gap:6px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.price-tag{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple)}
+.price-row{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.price b{font-family:var(--font-display);font-size:clamp(34px,4.4vw,46px);color:var(--gold);line-height:1.1}
+.price s{font-family:var(--font-display);font-size:21px;color:var(--muted);text-decoration-color:var(--purple);text-decoration-thickness:2px}
+.price-note{font-size:15px}
+.price-note + .price-note{color:var(--muted);font-size:14px}
+.offer .r .btn{width:100%}
+@media (max-width:860px){.offer{grid-template-columns:1fr}.offer .r{border-left:none;border-top:1px solid var(--line)}.offer .l,.offer .r{padding:30px 22px}}
+
+.tags{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}
+.tags span{padding:12px 20px;border-radius:999px;border:1px solid rgba(217,178,111,.45);background:rgba(217,178,111,.07);color:var(--gold-soft);font-weight:700;font-size:16px}
+.quotes{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.quote{padding:28px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--purple)}
+.quote span{display:block;margin-top:12px;color:var(--muted);font-size:14px}
+@media (max-width:700px){.quotes{grid-template-columns:1fr}}
+.teaser{font-family:var(--font-display);font-size:22px;line-height:1.3}
+.teaser-note{color:var(--muted)}
+footer{border-top:1px solid var(--line);padding:32px 0;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+footer a{text-decoration:none;color:var(--gold)}
+@media (max-width:600px){section{padding:68px 0}}
+@media (max-width:520px){.btn{white-space:normal;text-align:center;width:100%}.nav .btn{width:auto}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="https://menditarget.com">АРАЙ<span>·</span>ТАРГЕТ</a>
+    <a class="btn btn-ghost" href="#obuchenie">Про обучение</a>
+  </div>
+</header>
+
+<main>
+
+<!-- УРОК -->
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Бесплатный урок из моего обучения</span>
+    <h1>Conversions API простыми словами: как вернуть Meta <em>потерянные продажи</em></h1>
+    <p class="lead">Conversions API кажется сложным только до первого подключения. Объясняю на бытовых аналогиях и показываю два живых примера: магазин на Shopify и Telegram-бот с оплатой через Make</p>
+    <div class="chips">
+      <span class="chip">Пиксель и Conversions API</span>
+      <span class="chip">Shopify</span>
+      <span class="chip">Telegram-бот</span>
+      <span class="chip">Make</span>
+    </div>
+    <div class="video">
+      <iframe src="https://www.youtube-nocookie.com/embed/HDa_Q9RWZqU?rel=0&amp;modestbranding=1" title="Урок: Conversions API простыми словами" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Зачем смотреть</span>
+      <h2>Реклама учится на том, что видит Meta. А видит она не всё</h2>
+      <p class="lead">Пиксель работает в браузере клиента, и блокировщики, iOS и закрытые вкладки часть событий съедают. Conversions API передаёт данные напрямую с сервера</p>
+    </div>
+    <div class="grid3">
+      <div class="card">
+        <svg viewBox="0 0 80 80" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="22" width="46" height="36" rx="6"/><path d="M52 36 L72 26 V54 L52 44 Z"/></svg>
+        <h3>Пиксель: камера у входа</h3>
+        <p>Видит всё у двери магазина. Но если камеру закрыли, запись не дойдёт</p>
+      </div>
+      <div class="card hl">
+        <svg viewBox="0 0 80 80" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="22" y="6" width="36" height="68" rx="8"/><path d="M34 62 H46"/></svg>
+        <h3>Conversions API: звонок из офиса</h3>
+        <p>Бухгалтер сам звонит в Meta: заказ 123 оплачен. Прямой провод, который не заблокируешь</p>
+      </div>
+      <div class="card gold-card">
+        <svg viewBox="0 0 80 80" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="40" cy="40" r="30"/><path d="M26 40 L36 52 L56 28"/></svg>
+        <h3>Вместе надёжнее</h3>
+        <p>Ремень и подтяжки: каналы закрывают дыры друг друга, а дубли склеиваются по event_id</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Что внутри урока</span>
+      <h2>Разбираю по шагам</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="n num">01</span><h3>Пиксель и Conversions API</h3><p>Аналогии из жизни: камера, звонок, кассовая книга</p></div>
+      <div class="step"><span class="n num">02</span><h3>Почему теряются события</h3><p>Блокировщики, iOS, закрытая вкладка и что это значит для рекламы</p></div>
+      <div class="step"><span class="n num">03</span><h3>Дедупликация</h3><p>Как event_id спасает от двойного подсчёта одной покупки</p></div>
+      <div class="step"><span class="n num">04</span><h3>Качество совпадения</h3><p>Какие данные отправлять и как работает хэширование SHA-256</p></div>
+      <div class="step"><span class="n num">05</span><h3>Пример: Shopify</h3><p>Включаем Conversions API в магазине и проверяем в Events Manager</p></div>
+      <div class="step"><span class="n num">06</span><h3>Пример: Telegram-бот и Make</h3><p>Оплата в боте через Lava, сценарий в Make и событие Purchase в Meta</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Живой пример</span>
+      <h2>Продажа в Telegram, которую пиксель не видит</h2>
+      <p class="lead">Клиент оплатил в боте, сайта нет, пикселю не за что зацепиться. Сценарий в Make сам отправляет покупку в Meta</p>
+    </div>
+    <div class="flow">
+      <div class="node">Telegram-бот<small>клиент нажал «оплатить»</small></div><span class="arr" aria-hidden="true">→</span>
+      <div class="node">Lava<small>оплата прошла</small></div><span class="arr" aria-hidden="true">→</span>
+      <div class="node m">Make<small>сценарий</small></div><span class="arr" aria-hidden="true">→</span>
+      <div class="node g">Meta<small>событие Purchase</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- МОСТ К ОБУЧЕНИЮ -->
+<section class="bridge">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">А теперь главное</span>
+      <h2>Как такие знания превращаются в клиентов в долларах</h2>
+      <p class="lead">Техника сама по себе денег не приносит. Деньги приносит таргетолог, который умеет показать бизнесу, где тот теряет продажи</p>
+    </div>
+    <div class="why">
+      <div class="card"><b>01</b><h3>Зарубежный бизнес живёт на Shopify и в мессенджерах</h3><p>Открываешь Events Manager клиента и видишь, сколько покупок Meta не досчиталась</p></div>
+      <div class="card"><b>02</b><h3>Это твой аргумент на созвоне</h3><p>Ты приходишь с конкретной дырой в его рекламе и планом, как её закрыть. Так разговаривают специалисты, которым платят в долларах</p></div>
+      <div class="card"><b>03</b><h3>Дальше нужна вся система</h3><p>Где найти такого клиента, как написать оффер на английском, как провести созвон и не испугаться чека. Этому и посвящено обучение</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- КТО Я -->
+<section class="alt">
+  <div class="wrap about">
+    <div class="photo">
+      <img src="arai.jpg" alt="Арай, таргетолог" onerror="this.remove()">
+      <div class="mono" aria-hidden="true">А</div>
+    </div>
+    <div class="about-text">
+      <span class="eyebrow">Кто ведёт урок</span>
+      <h2>Привет, я Арай</h2>
+      <p><strong>Больше 4 лет в таргете</strong>. Сейчас веду клиентов из США, Канады и Англии и удалённо работаю <strong>менеджером по трафику в американской компании</strong></p>
+      <p>Живу в Шанхае, и даже здесь ко мне приходят компании за консалтингом из-за международного опыта. В обучении показываю этот путь на своих настоящих кейсах и инструментах</p>
+      <div class="facts">
+        <div class="fact"><b class="num">4+</b><span>года в таргете</span></div>
+        <div class="fact"><b>США · Канада · Англия</b><span>мои клиенты сейчас</span></div>
+        <div class="fact"><b class="num">100</b><span>уроков в обучении</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Что говорят ученики про уроки</span>
+      <h2>Без воды, ёмко и по делу</h2>
+      <p class="lead">Так ученики чаще всего описывают мои уроки</p>
+    </div>
+    <div class="tags">
+      <span>Супер полезно</span><span>Без воды</span><span>Ёмко и по делу</span><span>Всё понятно</span>
+    </div>
+    <div class="quotes">
+      <blockquote class="quote"><p>Уроки без долгих вступлений, сразу к делу. Отдельная благодарность за детальный сценарий созвона с клиентом</p><span>Ученица курса</span></blockquote>
+      <blockquote class="quote"><p>После вас отписалась от других обучающих таргетологов: ваш курс закрывает все пробелы</p><span>Ученица курса</span></blockquote>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Кейсы учеников</span>
+      <h2>Что получают ученики, которые дошли до клиентов</h2>
+    </div>
+    <div class="cases">
+      <div class="case"><b class="num">$5 500/мес</b><strong>Маржан</strong><span>Клиент из Гонконга</span></div>
+      <div class="case"><b class="num">$3 000</b><strong>Маржан</strong><span>Переехала в США, клиент из Нью-Йорка</span></div>
+      <div class="case"><b class="num">$2 300</b><strong>Алишер</strong><span>Онлайн-школа в США</span></div>
+    </div>
+    <p class="more"><a href="https://menditarget.com/#cases">Все кейсы и скрины переписок →</a></p>
+  </div>
+</section>
+
+<!-- ОБУЧЕНИЕ -->
+<section id="obuchenie">
+  <div class="wrap">
+    <div class="offer">
+      <div class="l">
+        <span class="eyebrow">Это 1 урок из 100</span>
+        <h2>А что в остальных 99?</h2>
+        <ul class="list">
+          <li>Как найти первого клиента в США, даже если английский пока слабый</li>
+          <li>Мой самый рабочий способ искать клиентов, который я сама использую</li>
+          <li>Как провести созвон с иностранным клиентом и спокойно назвать чек в долларах</li>
+          <li>ИИ-агенты, которые можно продавать клиентам отдельно от таргета</li>
+          <li>И личный созвон со мной каждую неделю</li>
+        </ul>
+      </div>
+      <div class="r">
+        <p class="teaser"><span class="gold">Вся программа, формат и условия</span> на основном сайте</p>
+        <p class="teaser-note">Сейчас там идёт последний этап скидки</p>
+        <a class="btn btn-gold" href="https://menditarget.com/#program">Смотреть программу обучения</a>
+        <a class="btn btn-ghost wa" href="https://wa.me/77785108842?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82%21%20%D0%9F%D0%BE%D1%81%D0%BC%D0%BE%D1%82%D1%80%D0%B5%D0%BB%28%D0%B0%29%20%D1%83%D1%80%D0%BE%D0%BA%20%D0%BF%D1%80%D0%BE%20Conversions%20API%2C%20%D1%85%D0%BE%D1%87%D1%83%20%D0%BD%D0%B0%20%D0%BE%D0%B1%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5" target="_blank" rel="noopener">Написать мне в WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>АРАЙ · Таргет, маркетинг и ИИ с поддержкой до результата</span>
+    <a href="https://menditarget.com">menditarget.com</a>
+  </div>
+</footer>
+
+<script>
+// Клик в WhatsApp отправляется в пиксель как Contact, если пиксель стоит на странице
+document.querySelectorAll('a.wa').forEach(function(a){
+  a.addEventListener('click',function(){ try{ if(window.fbq) fbq('track','Contact'); }catch(e){} });
+});
+</script>
+</body>
+</html>
